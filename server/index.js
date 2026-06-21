@@ -11,12 +11,11 @@ const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
 
-// Routes (uncomment as you build each module)
-// app.use('/api/auth', require('./routes/authRoutes'));
-// app.use('/api/animals', require('./routes/animalRoutes'));
-// app.use('/api/shelters', require('./routes/shelterRoutes'));
-// app.use('/api/reports', require('./routes/reportRoutes'));
-// app.use('/api/adoptions', require('./routes/adoptionRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/animals', require('./routes/animalRoutes'));
+app.use('/api/shelters', require('./routes/shelterRoutes'));
+app.use('/api/reports', require('./routes/reportRoutes'));
+app.use('/api/adoptions', require('./routes/adoptionRoutes'));
 
 app.get('/', (req, res) => res.send('Tunisia Pet Rescue API running'));
 
