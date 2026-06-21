@@ -16,6 +16,7 @@ app.use('/api/animals', require('./routes/animalRoutes'));
 app.use('/api/shelters', require('./routes/shelterRoutes'));
 app.use('/api/reports', require('./routes/reportRoutes'));
 app.use('/api/adoptions', require('./routes/adoptionRoutes'));
+app.use('/api/upload', require('./routes/uploadRoutes'));
 
 app.get('/', (req, res) => res.send('Tunisia Pet Rescue API running'));
 

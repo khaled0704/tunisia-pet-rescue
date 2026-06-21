@@ -15,10 +15,11 @@ function ShelterDashboard() {
   const [showAddAnimal, setShowAddAnimal] = useState(false)
   const [animalForm, setAnimalForm] = useState({
     name: '', species: 'dog', age: '', gender: 'male',
-    description: '', healthStatus: 'healthy', location: ''
+    description: '', healthStatus: 'healthy', location: '', photos: []
   })
   const [formMsg, setFormMsg] = useState('')
-
+  const [uploading, setUploading] = useState(false)
+  const [photoFiles, setPhotoFiles] = useState([])
   useEffect(() => {
     if (!user || user.role !== 'shelter') return navigate('/')
     fetchDashboard()
@@ -67,7 +68,21 @@ function ShelterDashboard() {
       setFormMsg(`❌ ${err.response?.data?.message || 'Error adding animal'}`)
     }
   }
-
+  const handlePhotoUpload = async (files) => {
+  const formData = new FormData()
+  Array.from(files).forEach(file => formData.append('photos', file))
+    try {
+        setUploading(true)
+        const { data } = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        setAnimalForm(prev => ({ ...prev, photos: data.urls }))
+    } catch (err) {
+        console.error(err)
+    } finally {
+        setUploading(false)
+    }
+    }
   const handleReviewAdoption = async (id, status) => {
     try {
       await api.patch(`/adoptions/${id}/review`, { status })
@@ -166,6 +181,24 @@ function ShelterDashboard() {
               <option value="under_treatment">Under Treatment</option>
             </select>
             <textarea placeholder="Description" value={animalForm.description} onChange={e => setAnimalForm({ ...animalForm, description: e.target.value })} style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', gridColumn: '1 / -1', resize: 'vertical' }} rows={3} />
+            <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ display: 'block', marginBottom: '0.3rem' }}>Photos</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => handlePhotoUpload(e.target.files)}
+                    style={{ width: '100%' }}
+                />
+                {uploading && <p style={{ color: '#888', margin: '0.3rem 0 0' }}>Uploading...</p>}
+                {animalForm.photos?.length > 0 && (
+                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                    {animalForm.photos.map((url, i) => (
+                        <img key={i} src={url} alt="preview" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                    ))}
+                    </div>
+                )}
+            </div>
             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#e63946', color: 'white', border: 'none', padding: '0.7rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
               Save Animal
             </button>
