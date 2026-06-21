@@ -11,6 +11,8 @@ import ReportStray from './pages/ReportStray'
 import ShelterDashboard from './pages/ShelterDashboard'
 import MyAdoptions from './pages/MyAdoptions'
 import AdminPanel from './pages/AdminPanel'
+import Profile from './pages/Profile'
+
 function App() {
   return (
     <BrowserRouter>
@@ -44,6 +46,12 @@ function App() {
         <Route path="/admin" element={
           <ProtectedRoute roles={['admin']}>
             <AdminPanel />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         } />
       </Routes>

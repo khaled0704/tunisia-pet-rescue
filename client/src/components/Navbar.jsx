@@ -28,7 +28,12 @@ function Navbar(){
 
             {user ? (
             <>
-                <span style={{ color: '#aaa' }}>Hi, {user.name}</span>
+                <Link to="/profile" style={{ color: '#aaa', textDecoration: 'none' }}>
+                    {user.avatar
+                        ? <img src={user.avatar} alt="avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', verticalAlign: 'middle' }} />
+                        : `Hi, ${user.name}`
+                    }
+                </Link>
                 {user?.role === 'visitor' && (
                     <Link to="/my-adoptions" style={{ color: 'white', textDecoration: 'none' }}>My Adoptions</Link>
                 )}

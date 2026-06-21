@@ -72,5 +72,38 @@ const getMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone, avatar } = req.body
 
-module.exports = { register, login, getMe };
+    const user = await User.findById(req.user.id)
+    if (!user) return res.status(404).json({ message: 'User not found' })
+
+    if (name) user.name = name
+    if (phone) user.phone = phone
+    if (avatar) user.avatar = avatar
+
+    // Handle password change
+    if (req.body.password) {
+      if (req.body.password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters' })
+      }
+      user.password = req.body.password
+    }
+
+    await user.save()
+
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      avatar: user.avatar,
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+module.exports = { register, login, getMe, updateProfile };
