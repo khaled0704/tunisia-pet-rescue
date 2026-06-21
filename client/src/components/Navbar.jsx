@@ -29,6 +29,9 @@ function Navbar(){
             {user ? (
             <>
                 <span style={{ color: '#aaa' }}>Hi, {user.name}</span>
+                {user?.role === 'visitor' && (
+                    <Link to="/my-adoptions" style={{ color: 'white', textDecoration: 'none' }}>My Adoptions</Link>
+                )}
                 {user.role === 'shelter' && (
                 <Link to="/shelter" style={{ color: 'white', textDecoration: 'none' }}>Dashboard</Link>
                 )}
